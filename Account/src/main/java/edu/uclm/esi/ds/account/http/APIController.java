@@ -1,6 +1,5 @@
 package edu.uclm.esi.ds.account.http;
 
-import java.util.Map;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,37 +9,33 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import edu.uclm.esi.ds.account.dao.UserDAO;
 import edu.uclm.esi.ds.account.entities.User;
+import edu.uclm.esi.ds.account.services.UserService;
 
 @RestController
 @RequestMapping("api")
 @CrossOrigin(origins = "http://localhost:80") 
 public class APIController {
-
 	@Autowired
-	private UserDAO userDao;
+	private UserService userService;
+
 	@GetMapping("/getUser")
-	public String getUser(@RequestHeader("Property") String secure
-			, @RequestBody Map<String, String> requested ) {
-		if(!secure.equals("abcd"))
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-		JSONObject jso =  new JSONObject();	
-		User user;
-		try {
-		user = this.userDao.findByName(requested.get("name"));
+	public String getUser(@RequestParam String id) {
+		JSONObject json =  new JSONObject();
+		User user = this.userService.getUserById(id);
 		
-		 if(user.equals(null));
-		}catch(NullPointerException e) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		if (user == null) {
+			throw ResponseStatusException(HttpStatus.NOT_FOUND);
 		}
-		jso.put("id", user.getId());
-		jso.put("name", user.getName());
-		jso.put("email", user.getEmail());
-		return jso.toString();
+
+		json.put("id", user.getId());
+		json.put("name", user.getName());
+		json.put("email", user.getEmail());
+
+		return json.toString();
 	}
-	
 }
