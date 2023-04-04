@@ -21,8 +21,6 @@ public class UserService {
 		user.setEmail(email);
 		user.setPwd(pwd);
 		this.userDAO.save(user);
-		sendGames(user.getName());
-
 	}
 
 	public void login(String name, String pwd) {

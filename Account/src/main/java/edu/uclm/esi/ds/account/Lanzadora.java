@@ -8,7 +8,6 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 @ServletComponentScan
 public class Lanzadora {
 	public static void main(String[] args) {
-
 		SpringApplication.run(Lanzadora.class, args);
 	}
 }

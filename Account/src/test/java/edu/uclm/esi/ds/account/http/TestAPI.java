@@ -27,7 +27,7 @@ public class TestAPI {
 	
 	@Test
 	void getUserTest() throws Exception {
-		RequestBuilder request = MockMvcRequestBuilders.get("/api/getUser?id=84b13ba6-27e9-41a2-95af-a90bdba92676");
+		RequestBuilder request = MockMvcRequestBuilders.get("/api/getUser?id=b2387495-3906-4af0-b6e9-0b166813b0bb");
 		ResultActions response = this.server.perform(request);
 		MvcResult result = response.andExpect(status().isOk()).andReturn();
 
@@ -35,7 +35,14 @@ public class TestAPI {
 		String payload = http.getContentAsString();
 		JSONObject json = new JSONObject(payload);
 
-		assertTrue(json.get("id").equals("84b13ba6-27e9-41a2-95af-a90bdba92676"));
+		assertTrue(json.get("id").equals("b2387495-3906-4af0-b6e9-0b166813b0bb"));
 		System.out.println(json.toString());
+	}
+
+	@Test
+	void getUserNotFoundTest() throws Exception {
+		RequestBuilder request = MockMvcRequestBuilders.get("/api/getUser?id=1234");
+		ResultActions response = this.server.perform(request);
+		MvcResult result = response.andExpect(status().isNotFound()).andReturn();
 	}
 }
