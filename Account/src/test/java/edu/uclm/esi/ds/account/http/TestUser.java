@@ -31,12 +31,17 @@ public class TestUser {
 	@Test
 	@Order(1)
 	void testRegister() throws Exception {
-		ResultActions result = this.sendRequest("Pepe", "pepe@pepe.com", "pepe123", "pepe123");
+
+		ResultActions result = this.sendRequest("Pepe", "pepe@pepe.com",
+				"pepe123", "pepe123");
 		result.andExpect(status().isOk()).andReturn();
+
 		result = this.sendRequest("Ana", "Ana@ana.com", "Pasword123", "Password123");
 		result.andExpect(status().isNotAcceptable()).andReturn();
+
 		result = this.sendRequest("Pepe", "pepe@pepe.com", "pepe123", "pepe123");
 		result.andExpect(status().isConflict()).andReturn();
+
 		result = this.sendRequest("Ana", "Ana@ana.com", "Password123", "Password123");
 		result.andExpect(status().isOk()).andReturn();
 	}
@@ -55,7 +60,8 @@ public class TestUser {
 
 	private ResultActions sendLogin(String name, String pwd) throws Exception {
 		JSONObject jsoUser = new JSONObject().put("name", name).put("pwd", pwd);
-		RequestBuilder request = MockMvcRequestBuilders.put("/users/login").contentType("application/json")
+		RequestBuilder request = MockMvcRequestBuilders.put("/users/login")
+				.contentType("application/json")
 				.content(jsoUser.toString());
 		ResultActions response = this.server.perform(request);
 		return response;
@@ -63,8 +69,13 @@ public class TestUser {
 
 	private ResultActions sendRequest(String name, String email, String pwd1, String pwd2)
 			throws Exception, UnsupportedEncodingException {
-		JSONObject jsoUser = new JSONObject().put("name", name).put("email", email).put("pwd1", pwd1).put("pwd2", pwd2);
-		RequestBuilder request = MockMvcRequestBuilders.post("/users/register?").contentType("application/json")
+		JSONObject jsoUser = new JSONObject()
+				.put("name", name)
+				.put("email", email)
+				.put("pwd1", pwd1)
+				.put("pwd2", pwd2);
+		RequestBuilder request = MockMvcRequestBuilders.post("/users/register?")
+				.contentType("application/json")
 				.content(jsoUser.toString());
 
 		ResultActions response = this.server.perform(request);

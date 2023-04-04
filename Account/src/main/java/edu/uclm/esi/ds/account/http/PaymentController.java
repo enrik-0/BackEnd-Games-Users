@@ -45,7 +45,8 @@ public class PaymentController {
 		System.out.println(clientSecret);
 		return clientSecret;
 } catch (StripeException e) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"payment failed");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST
+					,"payment failed");
 		}
 		}
 

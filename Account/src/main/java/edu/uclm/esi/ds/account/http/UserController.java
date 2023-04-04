@@ -29,7 +29,8 @@ public class UserController {
 		String pwd1 = data.get("pwd1").toString();
 		String pwd2 = data.get("pwd2").toString();
 		if (!pwd1.equals(pwd2))
-			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Las contraseñas no coinciden");
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE
+					, "Las contraseñas no coinciden");
 		try {
 
 			this.userService.register(name, email, pwd1);

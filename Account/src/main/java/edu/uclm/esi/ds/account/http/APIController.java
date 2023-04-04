@@ -24,12 +24,19 @@ public class APIController {
 	@Autowired
 	private UserDAO userDao;
 	@GetMapping("/getUser")
-	public String getUser(@RequestHeader("Property") String secure, @RequestBody Map<String, String> requested ) {
-		if(secure.equals("abc"))
-			throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT);
-		JSONObject jso =  new JSONObject();
-
-		User user = this.userDao.findByName(requested.get("name"));
+	public String getUser(@RequestHeader("Property") String secure
+			, @RequestBody Map<String, String> requested ) {
+		if(!secure.equals("abcd"))
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+		JSONObject jso =  new JSONObject();	
+		User user;
+		try {
+		user = this.userDao.findByName(requested.get("name"));
+		
+		 if(user.equals(null));
+		}catch(NullPointerException e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}
 		jso.put("id", user.getId());
 		jso.put("name", user.getName());
 		jso.put("email", user.getEmail());
