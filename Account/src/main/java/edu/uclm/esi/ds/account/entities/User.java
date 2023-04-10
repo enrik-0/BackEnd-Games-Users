@@ -11,8 +11,13 @@ import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "users", indexes = { @Index(columnList = "name", unique = true),
-		@Index(columnList = "email", unique = true), })
+@Table(
+	name = "users",
+	indexes = { 
+		@Index(columnList = "name", unique = true),
+		@Index(columnList = "email", unique = true),
+	}
+)
 public class User {
 	@Id
 	@Column(length = 36)
@@ -62,5 +67,4 @@ public class User {
 		pwd = org.apache.commons.codec.digest.DigestUtils.sha512Hex(pwd);
 		this.pwd = pwd;
 	}
-
 }

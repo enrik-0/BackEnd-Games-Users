@@ -44,6 +44,7 @@ public class TestUser {
 
 		result = this.sendRequest("Ana", "Ana@ana.com", "Password123", "Password123");
 		result.andExpect(status().isOk()).andReturn();
+		result.andExpect(status().isOk()).andReturn();
 	}
 
 	@Test
@@ -55,11 +56,12 @@ public class TestUser {
 		result.andExpect(status().isOk()).andReturn();
 		result = this.sendLogin("Paco", "Password123");
 		result.andExpect(status().isForbidden()).andReturn();
-
 	}
 
 	private ResultActions sendLogin(String name, String pwd) throws Exception {
-		JSONObject jsoUser = new JSONObject().put("name", name).put("pwd", pwd);
+		JSONObject jsoUser = new JSONObject()
+				.put("name", name)
+				.put("pwd", pwd);
 		RequestBuilder request = MockMvcRequestBuilders.put("/users/login")
 				.contentType("application/json")
 				.content(jsoUser.toString());
