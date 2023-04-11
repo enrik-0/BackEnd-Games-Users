@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import edu.uclm.esi.ds.account.dao.UserDAO;
 import edu.uclm.esi.ds.account.entities.User;
+import edu.uclm.esi.ds.account.entities.Token;
 
 @Service
 public class UserService {
@@ -21,6 +22,7 @@ public class UserService {
 		user.setName(name);
 		user.setEmail(email);
 		user.setPwd(pwd);
+		//user.setToken(new Token());
 
 		this.userDAO.save(user);
 	}
