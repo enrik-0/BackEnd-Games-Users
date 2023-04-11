@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import edu.uclm.esi.ds.account.entities.User;
+import edu.uclm.esi.ds.account.services.EmailService;
 import edu.uclm.esi.ds.account.services.UserService;
 import jakarta.servlet.http.HttpSession;
 
@@ -23,6 +24,8 @@ import jakarta.servlet.http.HttpSession;
 public class UserController {
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private EmailService emailService;
 
 	@PostMapping("/register")
 	public void register(@RequestBody Map<String, Object> data) {
@@ -42,6 +45,8 @@ public class UserController {
 		} catch (DataIntegrityViolationException e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT);
 		}
+
+		this.emailService.sendConfirmationEmail(user);
 	}
 
 	@PutMapping("/login")
