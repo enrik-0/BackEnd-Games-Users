@@ -1,5 +1,7 @@
 package edu.uclm.esi.ds.account.services;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,8 @@ import edu.uclm.esi.ds.account.entities.Token;
 public class UserService {
 	@Autowired
 	private UserDAO userDAO;
+	@Autowired
+	private EmailService emailService;
 
 	public void register(String name, String email, String pwd) {
 		User user = new User();
@@ -20,9 +24,16 @@ public class UserService {
 		user.setName(name);
 		user.setEmail(email);
 		user.setPwd(pwd);
-		//user.setToken(new Token());
+		Token token = new Token();
+		token.setUser(user);
 
 		this.userDAO.save(user);
+		try {
+			this.emailService.sendConfirmationEmail(user);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public User login(String name, String pwd) {
