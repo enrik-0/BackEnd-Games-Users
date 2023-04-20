@@ -3,6 +3,8 @@ package edu.uclm.esi.ds.account.http;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.UnsupportedEncodingException;
+
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +18,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import edu.uclm.esi.ds.account.dao.UserDAO;
 import edu.uclm.esi.ds.account.entities.User;
 	
 @SpringBootTest
@@ -24,10 +28,19 @@ import edu.uclm.esi.ds.account.entities.User;
 public class TestAPI {
 	@Autowired
 	MockMvc server;
+	@Autowired
+	UserDAO userDAO;
 	
 	@Test
 	void getUserTest() throws Exception {
-		RequestBuilder request = MockMvcRequestBuilders.get("/api/getUser?id=b2387495-3906-4af0-b6e9-0b166813b0bb");
+		
+		User user = new User();
+		user.setEmail("qewweq");
+		user.setName("qwer");
+		user.setPwd("trww");
+		user.setId("5");
+		this.userDAO.save(user);
+		RequestBuilder request = MockMvcRequestBuilders.get("/api/getUser?id=5");
 		ResultActions response = this.server.perform(request);
 		MvcResult result = response.andExpect(status().isOk()).andReturn();
 
@@ -45,4 +58,5 @@ public class TestAPI {
 		ResultActions response = this.server.perform(request);
 		MvcResult result = response.andExpect(status().isNotFound()).andReturn();
 	}
+	
 }

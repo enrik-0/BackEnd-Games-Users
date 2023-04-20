@@ -1,26 +1,19 @@
 package edu.uclm.esi.ds.account.http;
 
 import java.util.Map;
-
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
-
-import edu.uclm.esi.ds.account.services.UserService;
 
 @RestController
 @RequestMapping("payments")
@@ -42,18 +35,15 @@ public class PaymentController {
 			intent = PaymentIntent.create(params);
 		JSONObject jso = new JSONObject(intent.toJson());
 		String clientSecret = jso.getString("client_secret"); 
-		System.out.println(clientSecret);
 		return clientSecret;
-} catch (StripeException e) {
+		} catch (StripeException e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST
 					,"payment failed");
 		}
 		}
 
-@PostMapping(name = "/paymentsOK", consumes = "application/json")
-public void paymentOK(@RequestBody Map<String, String> info) {
-	String token = info.get("token");
-	
-	
-}
+	@PostMapping(value = "/paymentOK", consumes = "application/json")
+	public void paymentOK(@RequestBody Map<String, String> info) {
+		String token = info.get("token");
+	}
 }

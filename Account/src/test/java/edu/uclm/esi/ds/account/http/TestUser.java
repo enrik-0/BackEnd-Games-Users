@@ -19,6 +19,9 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import edu.uclm.esi.ds.account.dao.UserDAO;
+import edu.uclm.esi.ds.account.entities.User;
+
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
@@ -27,6 +30,8 @@ public class TestUser {
 
 	@Autowired
 	private MockMvc server;
+	@Autowired
+	private UserDAO userDAO;
 
 	@Test
 	@Order(1)
@@ -48,11 +53,15 @@ public class TestUser {
 	}
 
 	@Test
-	@Order(2)
+	@Order(1)
 	void testLogin() throws Exception {
-		ResultActions result = this.sendLogin("Pepe", "pepe123");
+		createUsers();
+		for (int i = 0; i<= 10000;i++);
+		User user = this.userDAO.findByName("Paxti");
+		
+		ResultActions result = this.sendLogin("Paxti", "Patxi123");
 		result.andExpect(status().isOk()).andReturn();
-		result = this.sendLogin("Ana", "Password123");
+		result = this.sendLogin("Paca", "Paca123");
 		result.andExpect(status().isOk()).andReturn();
 		result = this.sendLogin("Paco", "Password123");
 		result.andExpect(status().isForbidden()).andReturn();
@@ -62,7 +71,7 @@ public class TestUser {
 		JSONObject jsoUser = new JSONObject()
 				.put("name", name)
 				.put("pwd", pwd);
-		RequestBuilder request = MockMvcRequestBuilders.put("/users/login")
+		RequestBuilder request = MockMvcRequestBuilders.put("/users/login?")
 				.contentType("application/json")
 				.content(jsoUser.toString());
 		ResultActions response = this.server.perform(request);
@@ -82,6 +91,22 @@ public class TestUser {
 
 		ResultActions response = this.server.perform(request);
 		return response;
+	}
+	
+	private void createUsers() {
+		User user = new User();
+		user.setId("1");
+		user.setName("Paxti");
+		user.setEmail("qwe");
+		user.setPwd("Patxi123");
+		this.userDAO.save(user);
+		user = new User();
+		user.setId("2");
+		user.setName("Paca");
+		user.setPwd("Paca123");
+		user.setEmail("qew");
+		this.userDAO.save(user);
+
 	}
 
 }

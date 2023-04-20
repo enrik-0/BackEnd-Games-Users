@@ -21,9 +21,9 @@ public class APIController {
 	private UserService userService;
 
 	@GetMapping("/getUser")
-	public String getUser(@RequestParam String id) {
+	public String getUser(@RequestParam String cookie) {
 		JSONObject json =  new JSONObject();
-		User user = this.userService.getUserById(id);
+		User user = this.userService.getUserByCookie(cookie);
 		
 		if (user == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -32,7 +32,6 @@ public class APIController {
 		json.put("id", user.getId());
 		json.put("name", user.getName());
 		json.put("email", user.getEmail());
-
 		return json.toString();
 	}
 }
