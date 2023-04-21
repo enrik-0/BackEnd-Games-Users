@@ -1,5 +1,6 @@
 package edu.uclm.esi.ds.account.http;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.UnsupportedEncodingException;
@@ -60,11 +61,15 @@ public class TestUser {
 		User user = this.userDAO.findByName("Paxti");
 		
 		ResultActions result = this.sendLogin("Paxti", "Patxi123");
+		assertTrue(result.andReturn().getResponse().getHeader("sessionID") != null);
 		result.andExpect(status().isOk()).andReturn();
+
 		result = this.sendLogin("Paca", "Paca123");
 		result.andExpect(status().isOk()).andReturn();
+
 		result = this.sendLogin("Paco", "Password123");
 		result.andExpect(status().isForbidden()).andReturn();
+		assertTrue(result.andReturn().getResponse().getHeader("sessionID") == null);
 	}
 
 	private ResultActions sendLogin(String name, String pwd) throws Exception {
