@@ -50,22 +50,24 @@ public class UserController {
 
 	@PutMapping("/login")
 	public ResponseEntity<String> login(@RequestBody Map<String, Object> data) {
-		HttpHeaders headers = new HttpHeaders();
-		String name = data.get("name").toString();
-		String pwd = data.get("pwd").toString();
-		String pwdEncripted = org.apache.commons.codec.digest.DigestUtils.sha512Hex(pwd);
-		String uuid = UUID.randomUUID().toString();
+	    HttpHeaders headers = new HttpHeaders();
+	    String name = data.get("name").toString();
+	    String pwd = data.get("pwd").toString();
+	    String pwdEncripted = org.apache.commons.codec.digest.DigestUtils.sha512Hex(pwd);
+	    String uuid = UUID.randomUUID().toString();
 
-		User user = this.userService.login(name, pwdEncripted, uuid);
+	    User user = this.userService.login(name, pwdEncripted, uuid);
 
-		if (user == null)
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
-					"Invalid credentials");
+	    if (user == null) {
+	        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+	            .body("Invalid credentials");
+	    }
 
-		headers.add("sessionID", uuid);
-		ResponseEntity<String> res = new ResponseEntity<String>
-		("buenas",headers,HttpStatus.OK);
-		return res;
-		
+	    headers.add("sessionID", uuid);
+	    headers.add("Access-Control-Expose-Headers", "sessionID");
+	    ResponseEntity<String> res = new ResponseEntity<String>(headers, HttpStatus.OK);
+	    System.out.println(uuid);
+	    return res;
 	}
+
 }
