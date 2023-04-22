@@ -64,6 +64,7 @@ public class UserController {
 	    }
 
 	    headers.add("sessionID", uuid);
+	    //header to allow access to the front
 	    headers.add("Access-Control-Expose-Headers", "sessionID");
 	    ResponseEntity<String> res = new ResponseEntity<String>(headers, HttpStatus.OK);
 	    System.out.println(uuid);
