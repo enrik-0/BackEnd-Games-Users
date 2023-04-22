@@ -5,10 +5,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.ResponseEntity.HeadersBuilder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -19,11 +16,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 import edu.uclm.esi.ds.account.entities.User;
 import edu.uclm.esi.ds.account.services.UserService;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("users")
-@CrossOrigin("*")
+@CrossOrigin(origins = "*", exposedHeaders = "sessionID")
 public class UserController {
 	@Autowired
 	private UserService userService;
@@ -49,26 +46,18 @@ public class UserController {
 	}
 
 	@PutMapping("/login")
-	public ResponseEntity<String> login(@RequestBody Map<String, Object> data) {
-	    HttpHeaders headers = new HttpHeaders();
+	public void login(HttpServletResponse response, @RequestBody Map<String, Object> data) {
 	    String name = data.get("name").toString();
 	    String pwd = data.get("pwd").toString();
-	    String pwdEncripted = org.apache.commons.codec.digest.DigestUtils.sha512Hex(pwd);
-	    String uuid = UUID.randomUUID().toString();
+	    String sessionID = UUID.randomUUID().toString();
 
-	    User user = this.userService.login(name, pwdEncripted, uuid);
+	    User user = this.userService.login(name, pwd, sessionID);
 
 	    if (user == null) {
-	        return ResponseEntity.status(HttpStatus.FORBIDDEN)
-	            .body("Invalid credentials");
+	        throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+	        		"Invalid credentials");
 	    }
-
-	    headers.add("sessionID", uuid);
-	    //header to allow access to the front
-	    headers.add("Access-Control-Expose-Headers", "sessionID");
-	    ResponseEntity<String> res = new ResponseEntity<String>(headers, HttpStatus.OK);
-	    System.out.println(uuid);
-	    return res;
+	    
+	    response.setHeader("sessionID", sessionID);
 	}
-
 }
