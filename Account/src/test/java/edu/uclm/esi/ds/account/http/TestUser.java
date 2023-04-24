@@ -20,54 +20,45 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import edu.uclm.esi.ds.account.dao.UserDAO;
-import edu.uclm.esi.ds.account.entities.User;
-
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 @TestMethodOrder(OrderAnnotation.class)
 public class TestUser {
-
 	@Autowired
 	private MockMvc server;
-	@Autowired
-	private UserDAO userDAO;
 
 	@Test
 	@Order(1)
 	void testRegister() throws Exception {
-
-		ResultActions result = this.sendRequest("Pepe", "pepe@pepe.com",
+		ResultActions result = this.sendRegister("Pepe", "pepe@pepe.com",
 				"pepe123", "pepe123");
 		result.andExpect(status().isOk()).andReturn();
 
-		result = this.sendRequest("Ana", "Ana@ana.com", "Pasword123", "Password123");
+		result = this.sendRegister("Ana", "Ana@ana.com", "Pasword123", "Password123");
 		result.andExpect(status().isNotAcceptable()).andReturn();
 
-		result = this.sendRequest("Pepe", "pepe@pepe.com", "pepe123", "pepe123");
+		result = this.sendRegister("Pepe", "pepe@pepe.com", "pepe123", "pepe123");
 		result.andExpect(status().isConflict()).andReturn();
 
-		result = this.sendRequest("Ana", "Ana@ana.com", "Password123", "Password123");
-		result.andExpect(status().isOk()).andReturn();
+		result = this.sendRegister("Ana", "Ana@ana.com", "Password123", "Password123");
 		result.andExpect(status().isOk()).andReturn();
 	}
 
 	@Test
-	@Order(1)
+	@Order(2)
 	void testLogin() throws Exception {
-		createUsers();
-		for (int i = 0; i<= 10000;i++);
-		User user = this.userDAO.findByName("Paxti");
-		
-		ResultActions result = this.sendLogin("Paxti", "Patxi123");
+		ResultActions result = this.sendLogin("Pepe",
+				org.apache.commons.codec.digest.DigestUtils.sha512Hex("pepe123"));
+		result.andExpect(status().isOk()).andReturn();
 		assertTrue(result.andReturn().getResponse().getHeader("sessionID") != null);
+
+		result = this.sendLogin("Ana", 
+				org.apache.commons.codec.digest.DigestUtils.sha512Hex("Password123"));
 		result.andExpect(status().isOk()).andReturn();
 
-		result = this.sendLogin("Paca", "Paca123");
-		result.andExpect(status().isOk()).andReturn();
-
-		result = this.sendLogin("Paco", "Password123");
+		result = this.sendLogin("Paco",
+			org.apache.commons.codec.digest.DigestUtils.sha512Hex("Password123"));
 		result.andExpect(status().isForbidden()).andReturn();
 		assertTrue(result.andReturn().getResponse().getHeader("sessionID") == null);
 	}
@@ -76,42 +67,29 @@ public class TestUser {
 		JSONObject jsoUser = new JSONObject()
 				.put("name", name)
 				.put("pwd", pwd);
-		RequestBuilder request = MockMvcRequestBuilders.put("/users/login?")
+
+		RequestBuilder request = MockMvcRequestBuilders.put("/users/login")
 				.contentType("application/json")
 				.content(jsoUser.toString());
+
 		ResultActions response = this.server.perform(request);
+
 		return response;
 	}
 
-	private ResultActions sendRequest(String name, String email, String pwd1, String pwd2)
+	private ResultActions sendRegister(String name, String email, String pwd1, String pwd2)
 			throws Exception, UnsupportedEncodingException {
 		JSONObject jsoUser = new JSONObject()
 				.put("name", name)
 				.put("email", email)
 				.put("pwd1", pwd1)
 				.put("pwd2", pwd2);
-		RequestBuilder request = MockMvcRequestBuilders.post("/users/register?")
+
+		RequestBuilder request = MockMvcRequestBuilders.post("/users/register")
 				.contentType("application/json")
 				.content(jsoUser.toString());
 
 		ResultActions response = this.server.perform(request);
 		return response;
 	}
-	
-	private void createUsers() {
-		User user = new User();
-		user.setId("1");
-		user.setName("Paxti");
-		user.setEmail("qwe");
-		user.setPwd("Patxi123");
-		this.userDAO.save(user);
-		user = new User();
-		user.setId("2");
-		user.setName("Paca");
-		user.setPwd("Paca123");
-		user.setEmail("qew");
-		this.userDAO.save(user);
-
-	}
-
 }

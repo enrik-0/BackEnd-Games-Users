@@ -3,9 +3,7 @@ package edu.uclm.esi.ds.account.services;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import edu.uclm.esi.ds.account.dao.UserDAO;
 import edu.uclm.esi.ds.account.entities.User;
@@ -14,7 +12,7 @@ import edu.uclm.esi.ds.account.entities.User;
 public class UserService {
 	@Autowired
 	private UserDAO userDAO;
-	//cookie -> userId
+	//sessionID -> User
 	private HashMap<String, User> users = new HashMap<String, User>();
 
 	public void register(String name, String email, String pwd) {
@@ -27,19 +25,19 @@ public class UserService {
 		this.userDAO.save(user);
 	}
 
-	public User login(String name, String pwd, String cookie) {
-		
+	public User login(String name, String pwd, String sessionID) {
 		User user = userDAO.findByName(name);
+
 		if (user != null && user.getPwd().equals(pwd))
-				users.put(cookie, user);
+			users.put(sessionID, user);
 		else
 			user = null;
-		
+
 		return user;
 	}
 
-	public User getUserByCookie(String cookie) {
-		return users.get(cookie);
+	public User getUserBySessionID(String sessionID) {
+		return users.get(sessionID);
 	}
 }
 
