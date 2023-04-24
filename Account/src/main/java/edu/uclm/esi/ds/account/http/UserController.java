@@ -50,7 +50,6 @@ public class UserController {
 	    String name = data.get("name").toString();
 	    String pwd = data.get("pwd").toString();
 	    String sessionID = UUID.randomUUID().toString();
-
 	    User user = this.userService.login(name, pwd, sessionID);
 
 	    if (user == null) {

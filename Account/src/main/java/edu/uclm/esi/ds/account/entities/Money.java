@@ -22,6 +22,10 @@ public class Money {
 	
 	@Column
 	private int amount;
+
+	public int getAmount() {
+		return amount;
+	}
 	
 	
 

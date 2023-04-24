@@ -64,7 +64,6 @@ public class User {
 	}
 
 	public void setPwd(String pwd) {
-		pwd = org.apache.commons.codec.digest.DigestUtils.sha512Hex(pwd);
 		this.pwd = pwd;
 	}
 }

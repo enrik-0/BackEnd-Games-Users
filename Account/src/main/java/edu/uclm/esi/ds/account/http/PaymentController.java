@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +19,9 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
 
+import edu.uclm.esi.ds.account.entities.Money;
 import edu.uclm.esi.ds.account.entities.User;
+import edu.uclm.esi.ds.account.services.PaymentService;
 import edu.uclm.esi.ds.account.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,6 +35,8 @@ public class PaymentController {
 		}
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private PaymentService paymentsService;
 	
 	@RequestMapping("/aa")
 	public void aa(@RequestParam String session) {
@@ -63,19 +68,23 @@ public class PaymentController {
 		String token = info.get("token");
 	}
 	
-	@GetMapping(value = "/getMoney", headers = "sessionId")
-	public int getMoney(HttpServletRequest request, HttpServletResponse response) {
-		String session = request.getHeader("sessionId");
+	@GetMapping(value = "/getMoney")
+	public int getMoney(@RequestHeader("sessionId") String session, HttpServletResponse response, @RequestParam int w) {
 		User user = userService.getUserBySessionID(session);
+		Money money;
 		if (user == null)
 			try {
-				response.sendRedirect("http://localhost:4200/login");
-			} catch (IOException e) {
+				System.out.println("patata");
+				response.sendRedirect("http://localhost:4200");
+				return 0;
+				
+				//throw new ResponseStatusException(HttpStatus.TEMPORARY_REDIRECT);
+				 //money = paymentsService.getMoneyByUser(user);
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		
-		
-		return 2;
+		return 1;
 		
 	}
 }
