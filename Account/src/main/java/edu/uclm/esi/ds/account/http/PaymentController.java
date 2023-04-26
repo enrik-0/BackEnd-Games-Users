@@ -19,7 +19,7 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
 
-import edu.uclm.esi.ds.account.entities.Money;
+import edu.uclm.esi.ds.account.entities.Points;
 import edu.uclm.esi.ds.account.entities.User;
 import edu.uclm.esi.ds.account.services.PaymentService;
 import edu.uclm.esi.ds.account.services.UserService;
@@ -38,12 +38,6 @@ public class PaymentController {
 	@Autowired
 	private PaymentService paymentsService;
 	
-	@RequestMapping("/aa")
-	public void aa(@RequestParam String session) {
-		User user = userService.getUserBySessionID(session);
-		System.out.println(user);
-	}
-
 	@GetMapping("/prepay")
 	public String prepay(@RequestParam double amount) {
 		long total = (long) Math.floor(amount * 100);
@@ -68,10 +62,11 @@ public class PaymentController {
 		String token = info.get("token");
 	}
 	
-	@GetMapping(value = "/getMoney")
-	public int getMoney(@RequestHeader("sessionId") String session, HttpServletResponse response, @RequestParam int w) {
+	@GetMapping(value = "/getMoney", headers = "sessionID")
+	public int getMoney(HttpServletRequest request, HttpServletResponse response) {
+		String session = request.getHeader("sessionID");
 		User user = userService.getUserBySessionID(session);
-		Money money;
+		Points money;
 		if (user == null)
 			try {
 				System.out.println("patata");

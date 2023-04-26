@@ -9,11 +9,11 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(
-		name = "money",
+		name = "points",
 		indexes = {
 				@Index(columnList = "user_id", unique = true)
 		})
-public class Money {
+public class Points {
 	
 	@Id @Column(length = 36)
 	private String id;
