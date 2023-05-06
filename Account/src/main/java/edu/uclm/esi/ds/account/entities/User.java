@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(
+	schema = "account",
 	name = "users",
 	indexes = { 
 		@Index(columnList = "name", unique = true),

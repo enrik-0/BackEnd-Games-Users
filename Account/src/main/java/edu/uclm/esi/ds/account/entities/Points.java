@@ -9,14 +9,15 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(
+		schema = "account",
 		name = "points",
 		indexes = {
 				@Index(columnList = "user_id", unique = true)
 		})
 public class Points {
 	
-	@Id @Column(length = 36)
-	private String id;
+	@Id
+	 private int id;
 	@OneToOne
 	private User user;
 	
