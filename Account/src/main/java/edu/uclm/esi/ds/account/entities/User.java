@@ -31,6 +31,7 @@ public class User {
 	private String email;
 	@NotEmpty
 	private String pwd;
+	private int points = 0;
 
 	public User() {
 		this.id = UUID.randomUUID().toString();
@@ -66,5 +67,13 @@ public class User {
 
 	public void setPwd(String pwd) {
 		this.pwd = pwd;
+	}
+
+	public int getPoints() {
+		return points;
+	}
+
+	public void setPoints(int points) {
+		this.points = points;
 	}
 }
