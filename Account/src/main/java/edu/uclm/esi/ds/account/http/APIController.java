@@ -21,9 +21,9 @@ public class APIController {
 	private UserService userService;
 
 	@GetMapping("/getUser")
-	public String getUser(@RequestParam String id) {
+	public String getUser(@RequestParam String sessionID) {
 		JSONObject json =  new JSONObject();
-		User user = this.userService.getUserById(id);
+		User user = this.userService.getUserBySessionID(sessionID);
 		
 		if (user == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);

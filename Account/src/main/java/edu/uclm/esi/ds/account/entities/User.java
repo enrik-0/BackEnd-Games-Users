@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(
+	schema = "account",
 	name = "users",
 	indexes = { 
 		@Index(columnList = "name", unique = true),
@@ -30,6 +31,7 @@ public class User {
 	private String email;
 	@NotEmpty
 	private String pwd;
+	private int points = 0;
 
 	public User() {
 		this.id = UUID.randomUUID().toString();
@@ -64,7 +66,14 @@ public class User {
 	}
 
 	public void setPwd(String pwd) {
-		pwd = org.apache.commons.codec.digest.DigestUtils.sha512Hex(pwd);
 		this.pwd = pwd;
+	}
+
+	public int getPoints() {
+		return points;
+	}
+
+	public void setPoints(int points) {
+		this.points = points;
 	}
 }

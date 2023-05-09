@@ -1,11 +1,10 @@
 package edu.uclm.esi.ds.account.services;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import edu.uclm.esi.ds.account.dao.UserDAO;
 import edu.uclm.esi.ds.account.entities.User;
@@ -17,6 +16,8 @@ public class UserService {
 	private UserDAO userDAO;
 	@Autowired
 	private EmailService emailService;
+	//sessionID -> User
+	private HashMap<String, User> users = new HashMap<String, User>();
 
 	public void register(String name, String email, String pwd) {
 		User user = new User();
@@ -36,11 +37,19 @@ public class UserService {
 		}
 	}
 
-	public User login(String name, String pwd) {
-		return userDAO.findByName(name);
+	public User login(String name, String pwd, String sessionID) {
+		User user = userDAO.findByName(name);
+
+		if (user != null && user.getPwd().equals(pwd))
+			users.put(sessionID, user);
+		else
+			user = null;
+
+		return user;
 	}
 
-	public User getUserById(String id) {
-		return userDAO.findById(id).map(u -> (User) u).orElse(null);
+	public User getUserBySessionID(String sessionID) {
+		return users.get(sessionID);
 	}
 }
+

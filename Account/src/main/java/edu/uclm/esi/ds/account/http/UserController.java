@@ -1,6 +1,7 @@
 package edu.uclm.esi.ds.account.http;
 
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -16,11 +17,11 @@ import org.springframework.web.server.ResponseStatusException;
 import edu.uclm.esi.ds.account.entities.User;
 import edu.uclm.esi.ds.account.services.EmailService;
 import edu.uclm.esi.ds.account.services.UserService;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("users")
-@CrossOrigin("*")
+@CrossOrigin(origins = "*", exposedHeaders = "sessionID")
 public class UserController {
 	@Autowired
 	private UserService userService;
@@ -47,17 +48,18 @@ public class UserController {
 	}
 
 	@PutMapping("/login")
-	public void login(HttpSession session, @RequestBody Map<String, Object> data) {
-		String name = data.get("name").toString();
-		String pwd = data.get("pwd").toString();
-		String pwdEncripted = org.apache.commons.codec.digest.DigestUtils.sha512Hex(pwd);
+	public void login(HttpServletResponse response, @RequestBody Map<String, Object> data) {
+	    String name = data.get("name").toString();
+	    String pwd = data.get("pwd").toString();
+	    String sessionID = UUID.randomUUID().toString();
+	    System.out.println("hola");
+	    User user = this.userService.login(name, pwd, sessionID);
 
-		User user = this.userService.login(name, pwd);
-
-		if (user == null || !user.getPwd().equals(pwdEncripted))
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
-					"Invalid credentials");
-
-		session.setAttribute("userId", user.getId());
+	    if (user == null) {
+	        throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+	        		"Invalid credentials");
+	    }
+	    
+	    response.setHeader("sessionID", sessionID);
 	}
 }
