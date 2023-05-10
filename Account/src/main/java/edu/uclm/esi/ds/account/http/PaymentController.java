@@ -26,7 +26,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @CrossOrigin("*")
 public class PaymentController {
 	static {
-		Stripe.apiKey = "sk_test_51Mo0XwH4w1q9YTZYdmUtkr8MVbkZrlwAiqIwXoYIWXg453p5ot6YHt5tqhHgU666WmVzuvjZsfS0vQcD0ubB0CSI00cMqGDzf3";
+		Stripe.apiKey = "sk_test_51MxoAtEjDCrL15M4z00iteOiJiMDyAkBTvYHHo3OWQP7fYE3zc7oQSSIrlvYcn4pChgCSB4EUBmxkL2Hcp8ex8pU00T2zI9bu5";
 		}
 	@Autowired
 	private UserService userService;
@@ -35,8 +35,8 @@ public class PaymentController {
 	
 
 	@GetMapping("/prepay")
-	public String prepay(@RequestParam int amount,@RequestParam String sessionId ) {
-		User user = this.userService.getUserBySessionID(sessionId);
+	public String prepay(@RequestParam int amount,@RequestParam String sessionID ) {
+		User user = this.userService.getUserBySessionID(sessionID);
 		if(user != null) {
 		long total = (long) amount * 100;
 		int pointEarned = amount * 100;
@@ -51,6 +51,7 @@ public class PaymentController {
 		String clientSecret = jso.getString("client_secret"); 
 		this.points.put(clientSecret, pointEarned);
 		this.users.put(clientSecret, user);
+		System.out.println(clientSecret);
 		
 		return clientSecret;
 		} catch (StripeException e) {
@@ -65,11 +66,11 @@ public class PaymentController {
 	@PostMapping(value = "/paymentOK", consumes = "application/json")
 	public void paymentOK(@RequestBody Map<String, String> info) {
 		String token = info.get("token");
-		User user = userService.getUserBySessionID(info.get("sessionId"));
-		int points =Integer.parseInt(info.get("points"));
-		if (user != null && points >= 0)
+		User user = userService.getUserBySessionID(info.get("sessionID"));
+		int p = this.points.get(token);
+		if (user != null && p >= 0)
 			if (user.getId().equals(users.get(token).getId())) {
-				user.setPoints(points);
+				user.setPoints(p);
 				this.userService.updateUser(user);
 			}
 	
@@ -81,7 +82,7 @@ public class PaymentController {
 		String session = request.getHeader("sessionID");
 		User user = userService.getUserBySessionID(session);
 		if (user == null)
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 		else
 			return user.getPoints();
 		
