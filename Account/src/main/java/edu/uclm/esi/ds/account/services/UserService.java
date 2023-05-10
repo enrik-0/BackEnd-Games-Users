@@ -39,5 +39,10 @@ public class UserService {
 	public User getUserBySessionID(String sessionID) {
 		return users.get(sessionID);
 	}
+
+	public void updateUser(User user) {
+		this.userDAO.save(user);
+		
+	}
 }
 
