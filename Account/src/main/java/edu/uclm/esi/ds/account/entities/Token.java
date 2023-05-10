@@ -2,17 +2,24 @@ package edu.uclm.esi.ds.account.entities;
 
 import java.util.UUID;
 
+import javax.validation.constraints.NotEmpty;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(
+	schema = "account",
+	name = "tokens"
+)
 public class Token {
 	@Id @Column(length = 36)
 	private String id;
+	@Column @NotEmpty
 	private Long creationTime;
-	private Long confirmationTime;
 	@ManyToOne
 	private User user;
 	
@@ -37,14 +44,6 @@ public class Token {
 		this.creationTime = creationTime;
 	}
 
-	public Long getConfirmationTime() {
-		return confirmationTime;
-	}
-
-	public void setConfirmationTime(Long confirmationTime) {
-		this.confirmationTime = confirmationTime;
-	}
-	
 	public User getUser() {
 		return user;
 	}

@@ -32,6 +32,7 @@ public class User {
 	@NotEmpty
 	private String pwd;
 	private int points = 0;
+	private Long confirmationTime;
 
 	public User() {
 		this.id = UUID.randomUUID().toString();
@@ -76,4 +77,13 @@ public class User {
 	public void setPoints(int points) {
 		this.points = points;
 	}
+
+	public Long getConfirmationTime() {
+		return confirmationTime;
+	}
+
+	public void setConfirmationTime(long confirmationTime) {
+		this.confirmationTime = (Long) confirmationTime;
+	}
+
 }
