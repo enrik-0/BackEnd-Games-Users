@@ -77,6 +77,10 @@ public class UserService {
 		return users.get(sessionID);
 	}
 
+	public void updateUser(User user) {
+		this.userDAO.save(user);
+		
+	}
 	/**
 	 * Checks that no more than 15 minutes have passed since token creation time.
 	 * 
