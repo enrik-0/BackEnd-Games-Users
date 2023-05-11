@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +25,11 @@ import jakarta.servlet.http.HttpServletResponse;
 public class UserController {
 	@Autowired
 	private UserService userService;
+	
+	@GetMapping("/e")
+	public String e(){
+		return "hola";
+	}
 
 	@PostMapping("/register")
 	public void register(@RequestBody Map<String, Object> data) {

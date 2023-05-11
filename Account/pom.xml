@@ -154,7 +154,7 @@
  			<version>12.2.0.jre11</version>
 		</dependency>
 			
-		 <!-- <dependency>
+		  <dependency>
 		    <groupId>org.springframework.security</groupId>
 		    <artifactId>spring-security-config</artifactId>
 		</dependency>
@@ -162,13 +162,30 @@
 		<dependency>
 		    <groupId>org.springframework.security</groupId>
 		    <artifactId>spring-security-web</artifactId>
-		</dependency>   -->
+		</dependency>  
 		
-		<!-- <dependency>
+		 <dependency>
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-starter-oauth2-client</artifactId>
 		    <version>3.0.1</version>
-		</dependency> -->
+		</dependency>
+
+	
+    <!-- Otras dependencias de tu proyecto -->
+
+    <!-- Dependencia de SLF4J -->
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.7.32</version>
+    </dependency>
+
+    <!-- Implementación de SLF4J (por ejemplo, Logback) -->
+    <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>1.2.6</version>
+    </dependency>
 
 	</dependencies>
 </project>
