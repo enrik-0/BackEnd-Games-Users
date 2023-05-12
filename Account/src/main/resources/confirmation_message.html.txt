@@ -1,0 +1,12 @@
+<html>
+<body>
+<h1>Bienvenido a DSGames</h1>
+<p>Gracias por registrarte #nombre#!!</p>
+<p>Estamos encantados de tenerte con nosotros.</p>
+
+<h2>Un último paso...</h2>
+<p>Para activar tu cuenta y poder empezar a jugar pulse <a href="http://localhost:8080/users/confirm/#TOKEN#">aquí</a>.</p>
+
+<p style="font-size: 10px; font-style: italic">Recuerda que tu cuenta no se activará sino la confirmas en este mensaje antes de 15 minutos desde el envío.</p>
+<body>
+</html>
