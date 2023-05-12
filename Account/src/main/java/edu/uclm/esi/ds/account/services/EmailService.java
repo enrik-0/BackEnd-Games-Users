@@ -15,7 +15,8 @@ import okhttp3.Response;
 
 @Service
 public class EmailService {
-	public void sendConfirmation(User user) throws IOException {
+
+	public void sendConfirmationEmail(User user) throws IOException {
 		OkHttpClient client = new OkHttpClient().newBuilder().build();
 		MediaType mediaType = MediaType.parse("application/json");
 		
@@ -34,7 +35,7 @@ public class EmailService {
 		Response response = client.newCall(request).execute();	
 	}
 	
-	public JSONObject createJsonBody(User user) {
+	private JSONObject createJsonBody(User user) {
 		JSONObject jsonSender = new JSONObject()
 				.put("name", "Games S.A")
 				.put("email", "AngelLuis.Rodriguez1@alu.uclm.es");

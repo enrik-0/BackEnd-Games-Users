@@ -25,8 +25,6 @@ import jakarta.servlet.http.HttpServletResponse;
 public class UserController {
 	@Autowired
 	private UserService userService;
-	@Autowired
-	private EmailService emailService;
 
 	@PostMapping("/register")
 	public void register(@RequestBody Map<String, Object> data) {
@@ -47,7 +45,6 @@ public class UserController {
 			throw new ResponseStatusException(HttpStatus.CONFLICT);
 		}
 
-		this.emailService.sendConfirmationEmail(user);
 	}
 
 	@PutMapping("/login")

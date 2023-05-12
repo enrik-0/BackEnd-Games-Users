@@ -1,6 +1,10 @@
 package edu.uclm.esi.ds.account.services;
 
+<<<<<<< HEAD
 import java.util.HashMap;
+=======
+import java.io.IOException;
+>>>>>>> 6279f38 (minimal changes to email process)
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +16,8 @@ import edu.uclm.esi.ds.account.entities.Token;
 @Service
 public class UserService {
 	@Autowired
+	private EmailService emailService;
+	@Autowired
 	private UserDAO userDAO;
 	//sessionID -> User
 	private HashMap<String, User> users = new HashMap<String, User>();
@@ -22,9 +28,16 @@ public class UserService {
 		user.setName(name);
 		user.setEmail(email);
 		user.setPwd(pwd);
-		//user.setToken(new Token());
+		Token token = new Token();
+		token.setUser(user);
 
 		this.userDAO.save(user);
+		try {
+			this.emailService.sendConfirmationEmail(user);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public User login(String name, String pwd, String sessionID) {
