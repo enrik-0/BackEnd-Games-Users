@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +33,15 @@ public class APIController {
 		json.put("id", user.getId());
 		json.put("name", user.getName());
 		json.put("email", user.getEmail());
+		json.put("points", user.getPoints());
 
 		return json.toString();
+	}
+	@PutMapping("/updatePoints")
+	public void updatePoints(@RequestParam String sessionID, @RequestParam int ammount){
+		User user = this.userService.getUserBySessionID(sessionID);
+		user.setPoints(ammount);
+		this.userService.updateUser(user);
+		
 	}
 }
