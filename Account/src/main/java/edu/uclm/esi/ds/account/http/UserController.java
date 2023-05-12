@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,11 +24,6 @@ import jakarta.servlet.http.HttpServletResponse;
 public class UserController {
 	@Autowired
 	private UserService userService;
-	
-	@GetMapping("/e")
-	public String e(){
-		return "hola";
-	}
 
 	@PostMapping("/register")
 	public void register(@RequestBody Map<String, Object> data) {
@@ -56,7 +50,6 @@ public class UserController {
 	    String name = data.get("name").toString();
 	    String pwd = data.get("pwd").toString();
 	    String sessionID = UUID.randomUUID().toString();
-	    System.out.println("hola");
 	    User user = this.userService.login(name, pwd, sessionID);
 
 	    if (user == null) {

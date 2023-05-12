@@ -37,27 +37,31 @@ public class PaymentController {
 	@GetMapping("/prepay")
 	public String prepay(@RequestParam int amount,@RequestParam String sessionID ) {
 		User user = this.userService.getUserBySessionID(sessionID);
+
 		if(user != null) {
-		long total = (long) amount * 100;
-		int pointEarned = amount * 100;
-		PaymentIntentCreateParams params = new PaymentIntentCreateParams.Builder()
-		.setCurrency("eur")
-		.setAmount(total)
-		.build();
-		PaymentIntent intent;
-		try {
-			intent = PaymentIntent.create(params);
-		JSONObject jso = new JSONObject(intent.toJson());
-		String clientSecret = jso.getString("client_secret"); 
-		this.points.put(clientSecret, pointEarned);
-		this.users.put(clientSecret, user);
-		System.out.println(clientSecret);
-		
-		return clientSecret;
-		} catch (StripeException e) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST
-					,"payment failed");
-		}}
+			long total = (long) amount * 100;
+			int pointEarned = amount * 100;
+			PaymentIntentCreateParams params = new PaymentIntentCreateParams.Builder()
+			.setCurrency("eur")
+			.setAmount(total)
+			.build();
+			PaymentIntent intent;
+			try {
+
+				intent = PaymentIntent.create(params);
+
+				JSONObject jso = new JSONObject(intent.toJson());
+				String clientSecret = jso.getString("client_secret"); 
+
+				this.points.put(clientSecret, pointEarned);
+				this.users.put(clientSecret, user);
+
+				return clientSecret;
+			} catch (StripeException e) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST
+						,"payment failed");
+			}
+		}
 		else
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 		}
@@ -67,10 +71,11 @@ public class PaymentController {
 	public void paymentOK(@RequestBody Map<String, String> info) {
 		String token = info.get("token");
 		User user = userService.getUserBySessionID(info.get("sessionID"));
-		int p = this.points.get(token);
-		if (user != null && p >= 0)
+		int pointsDiff = this.points.get(token);
+
+		if (user != null && pointsDiff >= 0)
 			if (user.getId().equals(users.get(token).getId())) {
-				user.setPoints(p);
+				user.setPoints(pointsDiff);
 				this.userService.updateUser(user);
 			}
 	
@@ -81,6 +86,7 @@ public class PaymentController {
 	public int getPoint(HttpServletRequest request, HttpServletResponse response) {
 		String session = request.getHeader("sessionID");
 		User user = userService.getUserBySessionID(session);
+
 		if (user == null)
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 		else

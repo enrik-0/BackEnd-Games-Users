@@ -7,5 +7,4 @@ import edu.uclm.esi.ds.account.entities.User;
 public interface UserDAO extends JpaRepository<User, String> {
 
 	User findByName(String name);
-
 }
