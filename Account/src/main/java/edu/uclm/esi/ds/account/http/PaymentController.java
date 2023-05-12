@@ -1,4 +1,5 @@
 package edu.uclm.esi.ds.account.http;
+
 import java.util.HashMap;
 import java.util.Map;
 import org.json.JSONObject;
@@ -32,7 +33,6 @@ public class PaymentController {
 	private UserService userService;
 	private HashMap<String, Integer> points = new HashMap<String, Integer>();
 	private HashMap<String, User> users = new HashMap<String, User>();
-	
 
 	@GetMapping("/prepay")
 	public String prepay(@RequestParam int amount,@RequestParam String sessionID ) {
@@ -66,7 +66,6 @@ public class PaymentController {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 		}
 
-
 	@PostMapping(value = "/paymentOK", consumes = "application/json")
 	public void paymentOK(@RequestBody Map<String, String> info) {
 		String token = info.get("token");
@@ -78,10 +77,8 @@ public class PaymentController {
 				user.setPoints(pointsDiff);
 				this.userService.updateUser(user);
 			}
-	
 	}
 
-	
 	@GetMapping(value = "/getPoints", headers = "sessionID")
 	public int getPoint(HttpServletRequest request, HttpServletResponse response) {
 		String session = request.getHeader("sessionID");
@@ -91,7 +88,5 @@ public class PaymentController {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 		else
 			return user.getPoints();
-		
 	}
 }
-
