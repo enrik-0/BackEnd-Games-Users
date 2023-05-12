@@ -16,16 +16,16 @@ import edu.uclm.esi.ds.account.services.UserService;
 
 @RestController
 @RequestMapping("api")
-@CrossOrigin(origins = "http://localhost:80") 
+@CrossOrigin(origins = "http://localhost:80")
 public class APIController {
 	@Autowired
 	private UserService userService;
 
 	@GetMapping("/getUser")
 	public String getUser(@RequestParam String sessionID) {
-		JSONObject json =  new JSONObject();
+		JSONObject json = new JSONObject();
 		User user = this.userService.getUserBySessionID(sessionID);
-		
+
 		if (user == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		}
@@ -37,11 +37,22 @@ public class APIController {
 
 		return json.toString();
 	}
+
 	@PutMapping("/updatePoints")
-	public void updatePoints(@RequestParam String sessionID, @RequestParam int ammount){
+	public void updatePoints(@RequestParam String sessionID, @RequestParam int ammount, @RequestParam boolean add) {
 		User user = this.userService.getUserBySessionID(sessionID);
-		user.setPoints(ammount);
-		this.userService.updateUser(user);
-		
+
+		if (user == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}
+
+		if (add) {
+			user.setPoints(ammount);
+		} else {
+			if ((user.getPoints() - ammount) < 0) {
+				throw new ResponseStatusException(HttpStatus.PAYMENT_REQUIRED);
+			}
+			user.removePoints(ammount);
+		}
 	}
 }

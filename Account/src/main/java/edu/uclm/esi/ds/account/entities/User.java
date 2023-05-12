@@ -11,14 +11,8 @@ import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(
-	schema = "account",
-	name = "users",
-	indexes = { 
-		@Index(columnList = "name", unique = true),
-		@Index(columnList = "email", unique = true),
-	}
-)
+@Table(schema = "account", name = "users", indexes = { @Index(columnList = "name", unique = true),
+		@Index(columnList = "email", unique = true), })
 public class User {
 	@Id
 	@Column(length = 36)
@@ -76,6 +70,12 @@ public class User {
 
 	public void setPoints(int points) {
 		this.points += points;
+	}
+
+	public void removePoints(int points) {
+		if ((this.points - points) >= 0) {
+			this.points -= points;
+		}
 	}
 
 	public Long getConfirmationTime() {
