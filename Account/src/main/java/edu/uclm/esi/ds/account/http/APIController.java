@@ -54,5 +54,7 @@ public class APIController {
 			}
 			user.removePoints(ammount);
 		}
+		
+		this.userService.updateUser(user);
 	}
 }
