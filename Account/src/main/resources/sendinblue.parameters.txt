@@ -1,0 +1,13 @@
+{
+	"endpoint" : "https://api.sendinblue.com/v3/smtp/email",
+	"headers" : {
+		"Content-Type": "application/json",
+		"Accept": "application/json",
+		"api-key": "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 "
+	},
+	"sender" : {
+		"name" : "DSGames",
+		"email" : "numberMatchDS@gmail.com"
+	},
+	"subject" : "Confirmar cuenta DSGames"
+}
